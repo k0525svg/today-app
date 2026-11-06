@@ -1,1 +1,215 @@
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 별자리 운세 ✨</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #111326;
+  color: #fff;
+}
+header {
+  text-align: center;
+  padding: 55px 20px 35px;
+  background: radial-gradient(circle at top, #51417c, #17172e 70%);
+}
+header p { color: #d6c6ff; letter-spacing: 3px; }
+h1 { font-size: 32px; margin: 15px 0; }
+header .sub { color: #c9c4db; letter-spacing: 0; }
+.date { color: #c8b7ff; font-size: 14px; }
+.container { max-width: 850px; margin: auto; padding: 25px 18px; }
+h2 { font-size: 20px; margin-bottom: 18px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.sign {
+  background: #222440;
+  border: 1px solid #383958;
+  border-radius: 14px;
+  padding: 18px 5px;
+  text-align: center;
+  cursor: pointer;
+  color: white;
+  transition: .2s;
+}
+.sign:hover, .sign.active {
+  background: #51417c;
+  border-color: #c5aaff;
+  transform: translateY(-3px);
+}
+.symbol { font-size: 32px; display: block; margin-bottom: 8px; }
+.name { font-size: 14px; }
+.period { font-size: 10px; color: #aaa8c7; margin-top: 5px; }
+.result {
+  display: none;
+  margin-top: 30px;
+  background: #222440;
+  border: 1px solid #51417c;
+  border-radius: 20px;
+  padding: 25px;
+}
+.result h2 { text-align: center; font-size: 25px; }
+.message {
+  line-height: 1.9;
+  color: #e2dff0;
+  font-size: 15px;
+  text-align: center;
+  margin: 20px 0;
+}
+.info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.info div {
+  background: #30314e;
+  padding: 15px;
+  border-radius: 12px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+.info span { color: #c9b1ff; }
+.lucky {
+  margin-top: 15px;
+  text-align: center;
+  color: #d6c6ff;
+  line-height: 2;
+}
+footer {
+  text-align: center;
+  color: #85839f;
+  padding: 35px 10px;
+  font-size: 12px;
+}
+@media(max-width: 450px) {
+  h1 { font-size: 26px; }
+  .grid { gap: 8px; }
+  .sign { padding: 14px 3px; }
+  .symbol { font-size: 27px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <p>✦ DAILY ASTROLOGY ✦</p>
+  <h1>오늘의 별자리 운세</h1>
+  <div class="sub">당신의 하루에 별빛이 함께하기를</div>
+  <p class="date" id="today"></p>
+</header>
+
+<main class="container">
+  <h2>🌙 나의 별자리를 선택하세요</h2>
+  <div class="grid" id="zodiac"></div>
+
+  <section class="result" id="result">
+    <h2 id="title"></h2>
+    <p class="message" id="message"></p>
+    <div class="info">
+      <div>💕 애정운<br><span id="love"></span></div>
+      <div>💰 금전운<br><span id="money"></span></div>
+      <div>💼 직장운<br><span id="work"></span></div>
+      <div>🌿 건강운<br><span id="health"></span></div>
+    </div>
+    <div class="lucky">
+      🍀 행운의 숫자 : <span id="number"></span><br>
+      🎨 행운의 색상 : <span id="color"></span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  ✨ 별자리 운세는 재미와 참고를 위한 콘텐츠입니다. ✨
+</footer>
+
+<script>
+const signs = [
+  ["♈","양자리","3.21 - 4.19"],
+  ["♉","황소자리","4.20 - 5.20"],
+  ["♊","쌍둥이자리","5.21 - 6.21"],
+  ["♋","게자리","6.22 - 7.22"],
+  ["♌","사자자리","7.23 - 8.22"],
+  ["♍","처녀자리","8.23 - 9.22"],
+  ["♎","천칭자리","9.23 - 10.22"],
+  ["♏","전갈자리","10.23 - 11.22"],
+  ["♐","사수자리","11.23 - 12.21"],
+  ["♑","염소자리","12.22 - 1.19"],
+  ["♒","물병자리","1.20 - 2.18"],
+  ["♓","물고기자리","2.19 - 3.20"]
+];
+
+const messages = [
+  "새로운 기회가 찾아올 수 있는 하루입니다. 주변의 작은 변화에도 관심을 가져보세요.",
+  "서두르기보다는 차분하게 생각하는 것이 좋습니다. 오늘은 자신을 돌보는 시간을 가져보세요.",
+  "뜻밖의 만남이나 대화가 좋은 기회로 이어질 수 있습니다. 먼저 마음을 열어보세요.",
+  "그동안 노력했던 일이 조금씩 결실을 맺을 수 있습니다. 스스로를 믿어보세요.",
+  "주변 사람들과의 관계에서 행복을 발견할 수 있는 날입니다. 따뜻한 말 한마디를 건네보세요.",
+  "작은 계획부터 하나씩 실천해 보세요. 꾸준함이 오늘의 가장 큰 무기가 됩니다."
+];
+
+const ratings = ["★★★☆☆","★★★★☆","★★★★★","★★☆☆☆"];
+
+const colors = ["라벤더","하늘색","아이보리","핑크","네이비","민트","보라","골드"];
+
+const today = new Date();
+document.getElementById("today").textContent =
+  today.getFullYear() + "년 " +
+  (today.getMonth()+1) + "월 " +
+  today.getDate() + "일";
+
+const grid = document.getElementById("zodiac");
+
+signs.forEach((sign, i) => {
+  const card = document.createElement("button");
+  card.className = "sign";
+  card.innerHTML = `
+    <span class="symbol">${sign[0]}</span>
+    <span class="name">${sign[1]}</span>
+    <div class="period">${sign[2]}</div>
+  `;
+  card.onclick = () => showFortune(i, card);
+  grid.appendChild(card);
+});
+
+function showFortune(index, card) {
+  document.querySelectorAll(".sign").forEach(el => el.classList.remove("active"));
+  card.classList.add("active");
+
+  const seed = today.getFullYear() * 10000 +
+    (today.getMonth()+1) * 100 + today.getDate();
+
+  function pick(arr, offset) {
+    return arr[(seed + index * 17 + offset * 13) % arr.length];
+  }
+
+  document.getElementById("title").textContent =
+    signs[index][0] + " " + signs[index][1] + " 오늘의 운세";
+
+  document.getElementById("message").textContent =
+    pick(messages, 1);
+
+  document.getElementById("love").textContent = pick(ratings, 2);
+  document.getElementById("money").textContent = pick(ratings, 3);
+  document.getElementById("work").textContent = pick(ratings, 4);
+  document.getElementById("health").textContent = pick(ratings, 5);
+  document.getElementById("number").textContent =
+    (seed + index * 7) % 99 + 1;
+  document.getElementById("color").textContent = pick(colors, 6);
+
+  document.getElementById("result").style.display = "block";
+  document.getElementById("result").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+</script>
+</body>
+</html>
+
